@@ -628,17 +628,18 @@
       $(".TS-series_nav_container").append(this.el);
       this.el.toggle(this.hideNotches, this.showNotches);
     }
+    
+    max : function() {
+    	var last = _(this.cards).max(this._comparator);
+    	if (last.get('endstamp')) return last.get('endstamp');
+    	return last.get('timestamp');
+    },
+    
+    min : function() {
+    	var first = _(this.cards).min(this._comparator);
+    	return first.get('timestamp');
+    }
   });
-
-  // Proxy to underscore for `min` and `max`.
-  _(["min", "max"]).each(function(key){
-    Series.prototype[key] = function() {
-      var temptimeStamp = _[key].call(_, this.cards, this._comparator).get("timestamp");
-      var tempEndStamp = _[key].call(_, this.cards, this._comparator).get("endstamp");
-      return (tempEndStamp && (tempEndStamp > temptimeStamp)) ? tempEndStamp : temptimeStamp;
-    };
-  });
-
 
   // Every `Card` handles a notch div which is immediately appended to the `Bar`
   // and a `.TS-card_container` which is lazily rendered.
